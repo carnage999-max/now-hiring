@@ -30,27 +30,27 @@ Create a Next.js application that serves as a job application portal and provide
 
 ### Phase 1: Foundation & Setup
 - [x] Initialize Next.js app.
-- [ ] Install additional dependencies (`framer-motion`, `lucide-react`, `pg`).
-- [ ] Setup global CSS variables for the premium theme (HSL colors).
+- [x] Install additional dependencies (`framer-motion`, `lucide-react`, `pg`).
+- [x] Setup global CSS variables for the premium theme (HSL colors).
 
 ### Phase 2: React Components & standalone page
-- [ ] Create `Button`, `Input`, `Select`, `Modal` components with glassmorphism styles.
-- [ ] Create the Main Application Form (`JobApplicationForm`).
-- [ ] Implement the standalone page at `/`.
+- [x] Create `Button`, `Input`, `Select`, `Modal` components with glassmorphism styles.
+- [x] Create the Main Application Form (`JobApplicationForm`).
+- [x] Implement the standalone page at `/`.
 
 ### Phase 3: The Embeddable Widget
-- [ ] Create `/app/embed/page.tsx` (The iframe content - stripped down version).
-- [ ] Create `public/widget.js`:
+- [x] Create `/app/embed/page.tsx` (The iframe content - stripped down version).
+- [x] Create `public/widget.js`:
     - Logic to inject a button or listen for a trigger.
     - Logic to open an iframe pointing to `/embed`.
     - PostMessage communication (optional, for closing modal).
 
 ### Phase 4: Backend & API
-- [ ] Create Postgres table schema (SQL script).
-- [ ] Create API route `/api/apply` to handle form submission (text + file).
-- [ ] Implement Email sending logic.
+- [x] Create Postgres table schema (SQL script).
+- [x] Create API route `/api/apply` to handle form submission (text + file).
+- [x] Implement Email sending logic.
 
 ### Phase 5: Polish
-- [ ] Add animations.
-- [ ] Ensure mobile responsiveness.
-- [ ] Test widget script locally.
+- [x] Add animations.
+- [x] Ensure mobile responsiveness.
+- [x] Test widget script locally.

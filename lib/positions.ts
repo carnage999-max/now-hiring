@@ -1,0 +1,56 @@
+export const positions = [
+  // Automotive
+  "Master Mechanic", 
+  "Service Technician",
+  "Lube Technician",
+  "Service Advisor",
+  "Shop Foreman",
+  "Auto Detailer",
+  "Parts Specialist",
+  "Tire Technician",
+  "Collision Repair Specialist",
+  "Automotive Painter",
+  
+  // Restaurant / Hospitality
+  "Executive Chef",
+  "Sous Chef",
+  "Line Cook",
+  "Prep Cook",
+  "Dishwasher",
+  "Restaurant Manager",
+  "Assistant Manager",
+  "Server",
+  "Bartender",
+  "Host / Hostess",
+  "Busser",
+  "Barista",
+  "Event Coordinator",
+  "Sommelier",
+  
+  // Barbershop / Salon
+  "Master Barber",
+  "Hair Stylist",
+  "Salon Manager",
+  "Receptionist",
+  "Colorist",
+  "Esthetician",
+  "Shampoo Technician",
+  
+  // General / Operations
+  "Operations Manager",
+  "Human Resources Specialist",
+  "Accountant / Bookkeeper",
+  "Marketing Manager",
+  "Social Media Coordinator",
+  "Customer Service Representative",
+  "Facilities Manager",
+  "Maintenance Technician",
+  "Delivery Driver",
+  "Security Officer",
+  "Janitor / Cleaner",
+  "Inventory Specialist",
+  "IT Support Specialist",
+  "Administrative Assistant",
+  "Sales Representative",
+  "Business Development Manager"
+].sort();
