@@ -1,6 +1,6 @@
 (function () {
     // Infer the base URL from the script source
-    var scriptSource = document.currentScript ? document.currentScript.src : 'https://now-hiring.vercel.app'; // Fallback
+    var scriptSource = document.currentScript ? document.currentScript.src : 'https://now-hiring-eta.vercel.app'; // Fallback
     var baseUrl = new URL(scriptSource).origin;
 
     // 1. Create the floating trigger button

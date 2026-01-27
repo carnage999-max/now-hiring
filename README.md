@@ -1,15 +1,44 @@
 # Now Hiring - Job Portal & Widget
 
-A premium, glassmorphism-styled job application portal that works as a standalone site or an embeddable widget.
+A premium, glassmorphism-styled standalone job portal that can also be embedded as a floating widget on ANY website.
 
-## Features
+---
 
-- **Standalone Page**: Beautiful landing page for job applications.
-- **Embeddable Widget**: Add a single line of script to ANY website to get a "Apply Now" floating button and modal.
-- **Backend Integration**: Saves applications to Postgres and sends email notifications with attachments.
-- **Dynamic**: Dropdown with 50+ positions, file upload, validations.
+## 🚀 How to Embed on Any Website
 
-## Getting Started
+You can add the "Apply Now" portal to any existing website by adding a single line of JavaScript. This will create a floating "Apply Now" button at the bottom-right of your site.
+
+### Step 1: Add the Script Tag
+Include the following script tag just before the closing `</body>` tag on your website:
+
+```html
+<script src="https://now-hiring-eta.vercel.app/widget.js"></script>
+```
+*Note: This script works instantly for any external website.*
+
+### Step 2: How it Works
+1.  **Floating Button**: The script automatically injects a purple "Apply Now" button onto your page.
+2.  **Iframe Modal**: Clicking the button opens a sleek, glassmorphism modal containing the full job application form.
+3.  **Source Tracking**: The application automatically tracks which website the applicant came from (e.g., your-client-site.com).
+4.  **Automatic Close**: The modal can be closed via the "X" button, returning the user to your background site instantly.
+
+---
+
+## 🛠️ Features
+- **Standalone Mode**: Use it as a full landing page (e.g., `https://your-domain.com`).
+- **Real-Time Data**: Dynamic US State and City dropdowns (automatically loads cities based on selected state).
+- **Comprehensive Form**: 50+ fields including:
+  - Personal Info & Photo Upload
+  - Employment Eligibility & Social Security
+  - Detailed Employment History (Nested)
+  - Professional References
+  - Educational Background
+- **Notifications**: Automatic email reports sent to your team via Resend.
+- **Persistence**: Data saved to a PostgreSQL database.
+
+---
+
+## ⚙️ Local Setup
 
 1. **Install Dependencies**
    ```bash
@@ -17,34 +46,30 @@ A premium, glassmorphism-styled job application portal that works as a standalon
    ```
 
 2. **Configure Environment**
-   Copy `.env.example` to `.env` and fill in your Database and SMTP details.
-   ```bash
-   cp .env.example .env
-   ```
+   Copy `.env.example` to `.env` and fill in your details:
+   - `DATABASE_URL`: Your PostgreSQL connection string.
+   - `RESEND_API_KEY`: Your API key from [Resend](https://resend.com).
 
 3. **Run Development Server**
    ```bash
    pnpm dev
    ```
 
-## How to Embed the Widget
+---
 
-To add the "Apply Now" button to any website, simply include the script tag pointing to your deployed URL.
+## 🏗️ Deployment
+This project is built with **Next.js 16** and is optimized for **Vercel**.
 
-```html
-<script src="https://your-domain.com/widget.js"></script>
-```
+1. Push your code to GitHub.
+2. Import the project into Vercel.
+3. Add your Environment Variables in the Vercel dashboard.
+4. The `widget.js` script will be available at `https://your-app-name.vercel.app/widget.js`.
 
-The script automatically detects the domain and loads the application form in a secure iframe modal.
+---
 
-## Deployment
-
-Deploy to Vercel or any Next.js compatible hosting. Ensure you set the Environment Variables in your project settings.
-
-## Project Structure
-
-- `app/page.tsx`: Main standalone landing page.
-- `app/embed/page.tsx`: Lightweight page optimized for the iframe widget.
-- `public/widget.js`: The magic script that injects the button and modal.
-- `components/JobApplicationForm.tsx`: The core form component.
-- `app/api/apply/route.ts`: API handler for form submissions.
+## 📂 Project Structure
+- `/app/page.tsx`: Standalone landing page.
+- `/app/embed/page.tsx`: Optimized view for the iframe widget.
+- `/public/widget.js`: The embeddable script for external sites.
+- `/components/JobApplicationForm.tsx`: Heart of the application (Shared).
+- `/app/api/apply/route.ts`: Backend handler for submissions.
