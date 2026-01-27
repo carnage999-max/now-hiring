@@ -10,7 +10,7 @@
       <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
       <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
     </svg>
-    Apply Now
+    <span>Apply Now</span>
   `;
 
     // Styles for the button
@@ -77,22 +77,15 @@
 
     triggerBtn.onclick = openModal;
 
-    // Auto-open on page load if it's the home page (root)
-    // You can adjust this logic to fit specific needs
-    if (window.location.pathname === '/') {
-        // Delay slightly to be polite
-        setTimeout(openModal, 1000);
-    }
-
     // Listen for close message from iframe
     window.addEventListener('message', function (event) {
-        // Be careful with origin check in dev vs prod, but good practice to check
-        // if (event.origin !== baseUrl) return; 
-
         if (event.data === 'close-widget') {
             modalContainer.style.opacity = '0';
             modalContainer.style.visibility = 'hidden';
             document.body.style.overflow = '';
+
+            // Switch to Icon Only mode after first close
+            triggerBtn.classList.add('widget-btn-icon-only');
         }
     });
 

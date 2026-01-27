@@ -2,13 +2,14 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, Check, AlertCircle, Loader2, X } from 'lucide-react';
+import { Upload, Check, AlertCircle, Loader2, X, ArrowRight, Briefcase } from 'lucide-react';
 import { positions } from '@/lib/positions';
 import { useSearchParams } from 'next/navigation';
 import { State, City } from 'country-state-city';
 
 export default function JobApplicationForm({ iswidget = false }: { iswidget?: boolean }) {
   const searchParams = useSearchParams();
+  const [step, setStep] = useState(iswidget ? 'landing' : 'form');
   
   const [formData, setFormData] = useState({
     firstName: '',
@@ -68,6 +69,11 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
       { name: '', title: '', company: '', phone: '' },
       { name: '', title: '', company: '', phone: '' }
     ],
+    veteranStatus: 'no',
+    skillsExperience: '',
+    emergencyContactName: '',
+    emergencyContactPhone: '',
+    emergencyContactRelationship: '',
     message: '',
     source: ''
   });
@@ -84,10 +90,12 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
     }
   }, [searchParams, iswidget]);
 
-  const [file, setFile] = useState<File | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const resumeInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
@@ -164,16 +172,18 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
     }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'photo' | 'resume') => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      if (type === 'photo') setPhotoFile(e.target.files[0]);
+      else setResumeFile(e.target.files[0]);
     }
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = (e: React.DragEvent, type: 'photo' | 'resume') => {
     e.preventDefault();
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFile(e.dataTransfer.files[0]);
+      if (type === 'photo') setPhotoFile(e.dataTransfer.files[0]);
+      else setResumeFile(e.dataTransfer.files[0]);
     }
   };
 
@@ -202,7 +212,8 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
         else if (typeof value === 'boolean') data.append(key, value ? 'true' : 'false');
       });
       
-      if (file) data.append('photo', file);
+      if (photoFile) data.append('photo', photoFile);
+      if (resumeFile) data.append('resume', resumeFile);
 
       const res = await fetch('/api/apply', {
         method: 'POST',
@@ -236,6 +247,31 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
           className="btn-link"
         >
           Submit another application
+        </button>
+      </motion.div>
+    );
+  }
+
+  if (step === 'landing') {
+    return (
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="widget-landing-card"
+      >
+        <div className="landing-icon-wrapper">
+          <Briefcase size={40} className="text-accent" />
+        </div>
+        <h2 className="landing-title">We are Hiring!</h2>
+        <p className="landing-subtitle">
+          We're looking for talented individuals to join our mission. Explore our open positions and start your journey with us today.
+        </p>
+        <button 
+          type="button"
+          onClick={() => setStep('form')}
+          className="btn-primary landing-btn"
+        >
+          Apply Now <ArrowRight size={20} />
         </button>
       </motion.div>
     );
@@ -300,6 +336,25 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
             <label className="label">Referred By</label>
             <input name="referredBy" className="glass-input" value={formData.referredBy} onChange={handleChange} />
           </div>
+        </div>
+      </div>
+
+      {/* SECTION: EMERGENCY CONTACT */}
+      <div className="form-section">
+        <h3 className="section-title">Emergency Contact</h3>
+        <div className="form-row-2">
+          <div>
+            <label className="label">Contact Name</label>
+            <input name="emergencyContactName" className="glass-input" value={formData.emergencyContactName} onChange={handleChange} />
+          </div>
+          <div>
+            <label className="label">Phone Number</label>
+            <input type="tel" name="emergencyContactPhone" className="glass-input" value={formData.emergencyContactPhone} onChange={handleChange} />
+          </div>
+        </div>
+        <div className="mt-4">
+          <label className="label">Relationship</label>
+          <input name="emergencyContactRelationship" className="glass-input" value={formData.emergencyContactRelationship} onChange={handleChange} />
         </div>
       </div>
 
@@ -371,6 +426,14 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
             </select>
           </div>
         </div>
+        <div className="mt-4">
+          <label className="label">Veteran Status</label>
+          <select name="veteranStatus" className="glass-input" value={formData.veteranStatus} onChange={handleChange}>
+            <option value="no">No Veteran</option>
+            <option value="yes">Yes Veteran</option>
+            <option value="prefer-not-to-say">Prefer not to say</option>
+          </select>
+        </div>
         <div className="form-row-2 mt-4">
           <div>
             <label className="label">Ever worked here before?</label>
@@ -387,6 +450,7 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
         <div className="form-row-2 mt-4">
           <div>
             <label className="label">Convicted of a felony?</label>
+            <p className="label-disclaimer" style={{ textTransform: 'none', marginBottom: '8px', opacity: 0.7 }}>Note: A conviction will not necessarily disqualify you from employment.</p>
             <select name="hasFelony" className="glass-input" value={formData.hasFelony} onChange={handleChange}>
               <option value="no">No</option>
               <option value="yes">Yes</option>
@@ -543,6 +607,25 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
         ))}
       </div>
 
+      {/* SECTION: SKILLS & CERTIFICATIONS */}
+      <div className="form-section">
+        <h3 className="section-title">Other Skills & Certifications</h3>
+        <div>
+          <label className="label">Skills / Experience / Certifications</label>
+          <textarea 
+            name="skillsExperience" 
+            className="glass-input textarea-resize" 
+            maxLength={200}
+            placeholder="List any other relevant skills (Max 200 characters)"
+            value={formData.skillsExperience} 
+            onChange={handleChange} 
+          />
+          <div style={{ textAlign: 'right', fontSize: '12px', opacity: 0.5, marginTop: '4px' }}>
+            {formData.skillsExperience.length} / 200
+          </div>
+        </div>
+      </div>
+
       {/* SECTION: EMPLOYMENT HISTORY */}
       <div className="form-section">
         <h3 className="section-title">Employment History (Most recent first)</h3>
@@ -617,25 +700,52 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
       </div>
 
       <div className="form-section">
-        <h3 className="section-title">Additional Info & Photo</h3>
-        <label className="label">Upload Photo</label>
-        <div 
-          className={`file-upload-zone ${file ? 'file-upload-active' : ''}`}
-          onDragOver={e => e.preventDefault()}
-          onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <input type="file" ref={fileInputRef} className="hidden-input" accept="image/*" onChange={handleFileChange} />
-          {file ? (
-            <div className="file-preview">
-              <span className="file-name">{file.name}</span>
-              <button type="button" onClick={(e) => { e.stopPropagation(); setFile(null); }} className="btn-icon"><X size={16} /></button>
+        <h3 className="section-title">Documents & Photos</h3>
+        
+        <div className="form-row-2">
+          <div>
+            <label className="label">Upload Photo</label>
+            <div 
+              className={`file-upload-zone ${photoFile ? 'file-upload-active' : ''}`}
+              onDragOver={e => e.preventDefault()}
+              onDrop={e => handleDrop(e, 'photo')}
+              onClick={() => photoInputRef.current?.click()}
+            >
+              <input type="file" ref={photoInputRef} className="hidden-input" accept="image/*" onChange={e => handleFileChange(e, 'photo')} />
+              {photoFile ? (
+                <div className="file-preview">
+                  <span className="file-name">{photoFile.name}</span>
+                  <button type="button" onClick={(e) => { e.stopPropagation(); setPhotoFile(null); }} className="btn-icon"><X size={16} /></button>
+                </div>
+              ) : (
+                <div className="upload-placeholder">
+                  <Upload size={24} /><p className="upload-text">Photo</p>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="upload-placeholder">
-              <Upload size={24} /><p className="upload-text">Upload Photo</p>
+          </div>
+
+          <div>
+            <label className="label">Upload Resume</label>
+            <div 
+              className={`file-upload-zone ${resumeFile ? 'file-upload-active' : ''}`}
+              onDragOver={e => e.preventDefault()}
+              onDrop={e => handleDrop(e, 'resume')}
+              onClick={() => resumeInputRef.current?.click()}
+            >
+              <input type="file" ref={resumeInputRef} className="hidden-input" accept=".pdf,.doc,.docx" onChange={e => handleFileChange(e, 'resume')} />
+              {resumeFile ? (
+                <div className="file-preview">
+                  <span className="file-name">{resumeFile.name}</span>
+                  <button type="button" onClick={(e) => { e.stopPropagation(); setResumeFile(null); }} className="btn-icon"><X size={16} /></button>
+                </div>
+              ) : (
+                <div className="upload-placeholder">
+                  <Upload size={24} /><p className="upload-text">Resume (PDF/DOC)</p>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
         <div className="mt-4">

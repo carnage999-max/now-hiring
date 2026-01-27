@@ -6,35 +6,56 @@ A premium, glassmorphism-styled standalone job portal that can also be embedded 
 
 ## 🚀 How to Embed on Any Website
 
-You can add the "Apply Now" portal to any existing website by adding a single line of JavaScript. This will create a floating "Apply Now" button at the bottom-right of your site.
+You can add the "Apply Now" portal to any existing website. The widget starts with a "We're Hiring" landing card and then proceeds to the full application form.
 
-### Step 1: Add the Script Tag
-Include the following script tag just before the closing `</body>` tag on your website:
+### 1. Pure HTML / Standard Websites
+Add this single line before your closing `</body>` tag:
 
 ```html
 <script src="https://now-hiring-eta.vercel.app/widget.js"></script>
 ```
-*Note: This script works instantly for any external website.*
 
-### Step 2: How it Works
-1.  **Floating Button**: The script automatically injects a purple "Apply Now" button onto your page.
-2.  **Iframe Modal**: Clicking the button opens a sleek, glassmorphism modal containing the full job application form.
-3.  **Source Tracking**: The application automatically tracks which website the applicant came from (e.g., your-client-site.com).
-4.  **Automatic Close**: The modal can be closed via the "X" button, returning the user to your background site instantly.
+### 2. Next.js (App Router)
+Add the `Script` component to your `app/layout.tsx`:
+
+```tsx
+import Script from 'next/script'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html>
+      <body>
+        {children}
+        <Script src="https://now-hiring-eta.vercel.app/widget.js" strategy="afterInteractive" />
+      </body>
+    </html>
+  )
+}
+```
+
+### 3. React (Vite / CRA)
+Add the script to your `index.html` file before the `</body>` tag:
+
+```html
+<script src="https://now-hiring-eta.vercel.app/widget.js"></script>
+```
 
 ---
 
-## 🛠️ Features
-- **Standalone Mode**: Use it as a full landing page (e.g., `https://your-domain.com`).
-- **Real-Time Data**: Dynamic US State and City dropdowns (automatically loads cities based on selected state).
-- **Comprehensive Form**: 50+ fields including:
-  - Personal Info & Photo Upload
-  - Employment Eligibility & Social Security
-  - Detailed Employment History (Nested)
-  - Professional References
-  - Educational Background
-- **Notifications**: Automatic email reports sent to your team via Resend.
-- **Persistence**: Data saved to a PostgreSQL database.
+## ✨ Features
+- **Smart Widget Flow**: 
+  - On load, users see a sleek **"We Are Hiring!"** landing card.
+  - Clicking "Apply Now" opens the full multi-section form.
+  - After closing the modal, the widget stays in the footer as a **minimal icon** (no text).
+- **Comprehensive Data**: 
+  - Dynamic US State/City dropdowns.
+  - Employment Eligibility & Social Security fields.
+  - Nested Employment History & References.
+  - **Resume & Photo Uploads**.
+- **Management**: 
+  - Applications saved to PostgreSQL.
+  - Detailed HTML email reports sent via Resend.
+  - Automated "Source Tracking" (know exactly which site the applicant used).
 
 ---
 
@@ -46,11 +67,11 @@ Include the following script tag just before the closing `</body>` tag on your w
    ```
 
 2. **Configure Environment**
-   Copy `.env.example` to `.env` and fill in your details:
-   - `DATABASE_URL`: Your PostgreSQL connection string.
-   - `RESEND_API_KEY`: Your API key from [Resend](https://resend.com).
+   Copy `.env.example` to `.env` and fill in:
+   - `DATABASE_URL`: PostgreSQL string.
+   - `RESEND_API_KEY`: API key from [Resend](https://resend.com).
 
-3. **Run Development Server**
+3. **Run Development**
    ```bash
    pnpm dev
    ```
@@ -58,18 +79,8 @@ Include the following script tag just before the closing `</body>` tag on your w
 ---
 
 ## 🏗️ Deployment
-This project is built with **Next.js 16** and is optimized for **Vercel**.
+Optimized for **Vercel**. 
 
-1. Push your code to GitHub.
-2. Import the project into Vercel.
-3. Add your Environment Variables in the Vercel dashboard.
-4. The `widget.js` script will be available at `https://your-app-name.vercel.app/widget.js`.
-
----
-
-## 📂 Project Structure
-- `/app/page.tsx`: Standalone landing page.
-- `/app/embed/page.tsx`: Optimized view for the iframe widget.
-- `/public/widget.js`: The embeddable script for external sites.
-- `/components/JobApplicationForm.tsx`: Heart of the application (Shared).
-- `/app/api/apply/route.ts`: Backend handler for submissions.
+1. Deploy the repo to Vercel.
+2. The widget will be available at `your-app-url.com/widget.js`.
+3. Check the provided deployment at: `https://now-hiring-eta.vercel.app`

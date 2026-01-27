@@ -13,27 +13,37 @@ export async function POST(req: NextRequest) {
     // Extracting all fields
     const data: any = {};
     for (const [key, value] of formData.entries()) {
-      if (key !== 'photo') {
+      if (key !== 'photo' && key !== 'resume') {
         data[key] = value;
       }
     }
 
-    const file = formData.get('photo') as File | null;
+    const photoFile = formData.get('photo') as File | null;
+    const resumeFile = formData.get('resume') as File | null;
 
     if (!data.firstName || !data.lastName || !data.email || !data.position) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Process File
+    // Process Files
     let photoData: string | null = null;
     let attachments = [];
     
-    if (file && file.size > 0) {
-      const arrayBuffer = await file.arrayBuffer();
+    if (photoFile && photoFile.size > 0) {
+      const arrayBuffer = await photoFile.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
-      photoData = `data:${file.type};base64,${buffer.toString('base64')}`;
+      photoData = `data:${photoFile.type};base64,${buffer.toString('base64')}`;
       attachments.push({
-        filename: file.name,
+        filename: `photo_${photoFile.name}`,
+        content: buffer,
+      });
+    }
+
+    if (resumeFile && resumeFile.size > 0) {
+      const arrayBuffer = await resumeFile.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      attachments.push({
+        filename: `resume_${resumeFile.name}`,
         content: buffer,
       });
     }
@@ -88,19 +98,25 @@ export async function POST(req: NextRequest) {
                   <p><strong>Referred By:</strong> ${data.referredBy || 'N/A'}</p>
                   <p><strong>Age (if < 18):</strong> ${data.ageIfUnder18 || 'N/A'}</p>
 
-                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">2. Address</h3>
+                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">2. Emergency Contact</h3>
+                  <p><strong>Name:</strong> ${data.emergencyContactName || 'N/A'}</p>
+                  <p><strong>Phone:</strong> ${data.emergencyContactPhone || 'N/A'}</p>
+                  <p><strong>Relationship:</strong> ${data.emergencyContactRelationship || 'N/A'}</p>
+
+                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">3. Address</h3>
                   <p><strong>Current Address:</strong> ${data.address}${data.aptSuite ? ', ' + data.aptSuite : ''}, ${data.city}, ${data.state} ${data.zip}</p>
                   <p><strong>Permanent Address:</strong> ${data.permanentAddress || 'Same as current'}</p>
                   <p><strong>Length of Residency:</strong> ${data.addressHowLong || 'N/A'}</p>
 
-                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">3. Employment Eligibility</h3>
+                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">4. Employment Eligibility</h3>
                   <p><strong>U.S. Citizen?</strong> ${data.isUSCitizen}</p>
                   <p><strong>Work Authorized?</strong> ${data.isWorkAuthorized}</p>
+                  <p><strong>Veteran Status:</strong> ${data.veteranStatus || 'N/A'}</p>
                   <p><strong>Convicted of Felony?</strong> ${data.hasFelony} ${data.felonyExplanation ? '(' + data.felonyExplanation + ')' : ''}</p>
                   <p><strong>Worked Here Before?</strong> ${data.previouslyWorkedHere} ${data.previousWorkDates ? '(' + data.previousWorkDates + ')' : ''}</p>
                   <p><strong>Drug Screening Consent?</strong> ${data.drugScreenConsent}</p>
 
-                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">4. Job & Availability</h3>
+                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">5. Job & Availability</h3>
                   <p><strong>Desired Pay:</strong> ${data.salaryDesired} / ${data.payType}</p>
                   <p><strong>Employment Type:</strong> ${data.employmentDesired}</p>
                   <p><strong>When Available:</strong> ${data.whenAvailable || 'N/A'}</p>
@@ -110,7 +126,7 @@ export async function POST(req: NextRequest) {
                   <p><strong>May contact current employer?</strong> ${data.mayInquirePresentEmployer}</p>
                   <p><strong>Applied here before?</strong> ${data.previouslyApplied} ${data.previouslyAppliedDate ? '(' + data.previouslyAppliedDate + ')' : ''}</p>
 
-                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">5. Weekly Availability</h3>
+                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">6. Weekly Availability</h3>
                   <table style="width: 100%; border-collapse: collapse;">
                     <tr style="background: #f2f2f2;">
                       <th style="border: 1px solid #ddd; padding: 8px;">MON</th>
@@ -132,7 +148,7 @@ export async function POST(req: NextRequest) {
                     </tr>
                   </table>
 
-                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">6. Education</h3>
+                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">7. Education</h3>
                   ${Object.entries(education).map(([level, edu]: any) => `
                     <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #ccc;">
                       <p><strong>${level.toUpperCase()}:</strong> ${edu.name || 'N/A'}</p>
@@ -140,7 +156,10 @@ export async function POST(req: NextRequest) {
                     </div>
                   `).join('')}
 
-                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">7. Employment History</h3>
+                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">8. Other Skills & Certifications</h3>
+                  <p>${data.skillsExperience ? data.skillsExperience.replace(/\n/g, '<br>') : 'None'}</p>
+
+                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">9. Employment History</h3>
                   ${employmentHistory.map((job: any, i: number) => `
                     <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
                       <p><strong>Employer #${i + 1}:</strong> ${job.employer || 'N/A'}</p>
@@ -152,7 +171,7 @@ export async function POST(req: NextRequest) {
                     </div>
                   `).join('')}
 
-                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">8. References</h3>
+                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">10. References</h3>
                   <table style="width: 100%; border-collapse: collapse;">
                     <tr style="background: #f2f2f2;">
                       <th style="border: 1px solid #ddd; padding: 8px;">Name</th>
@@ -170,7 +189,7 @@ export async function POST(req: NextRequest) {
                     `).join('')}
                   </table>
 
-                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">9. Additional Info</h3>
+                  <h3 style="color: #444; background: #eee; padding: 5px 10px;">11. Additional Comments</h3>
                   <p>${data.message ? data.message.replace(/\n/g, '<br>') : 'None'}</p>
                   
                   <div style="margin-top: 30px; font-size: 0.9em; padding: 15px; background: #f0f0f0; border-left: 4px solid #007AFF;">
