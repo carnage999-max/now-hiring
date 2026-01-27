@@ -3,7 +3,19 @@
     var scriptSource = document.currentScript ? document.currentScript.src : 'https://now-hiring-eta.vercel.app'; // Fallback
     var baseUrl = new URL(scriptSource).origin;
 
-    // 1. Create the floating trigger button
+    // 1. Create the floating trigger container
+    var widgetContainer = document.createElement('div');
+    widgetContainer.id = 'hiring-widget-trigger';
+    Object.assign(widgetContainer.style, {
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        zIndex: '999998',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+    });
+
     var triggerBtn = document.createElement('button');
     triggerBtn.innerHTML = `
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
@@ -15,10 +27,6 @@
 
     // Styles for the button
     Object.assign(triggerBtn.style, {
-        position: 'fixed',
-        bottom: '20px',
-        right: '20px',
-        zIndex: '999998',
         display: 'flex',
         alignItems: 'center',
         padding: '12px 24px',
@@ -37,7 +45,45 @@
     triggerBtn.onmouseenter = function () { triggerBtn.style.transform = 'scale(1.05) translateY(-2px)'; };
     triggerBtn.onmouseleave = function () { triggerBtn.style.transform = 'scale(1) translateY(0)'; };
 
-    document.body.appendChild(triggerBtn);
+    // Close button for the widget itself
+    var dismissBtn = document.createElement('button');
+    dismissBtn.innerHTML = '×';
+    Object.assign(dismissBtn.style, {
+        width: '24px',
+        height: '24px',
+        borderRadius: '50%',
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        color: '#fff',
+        border: 'none',
+        cursor: 'pointer',
+        fontSize: '18px',
+        lineHeight: '1',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        transition: 'background 0.2s',
+        marginBottom: '4px' // Little offset
+    });
+    dismissBtn.onmouseenter = function () { dismissBtn.style.backgroundColor = 'rgba(255, 69, 58, 0.6)'; };
+    dismissBtn.onmouseleave = function () { dismissBtn.style.backgroundColor = 'rgba(0,0,0,0.3)'; };
+
+    dismissBtn.onclick = function (e) {
+        e.stopPropagation();
+        widgetContainer.style.display = 'none';
+    };
+
+    widgetContainer.appendChild(triggerBtn);
+    widgetContainer.appendChild(dismissBtn);
+
+    // Find footer or fallback to body
+    var footer = document.querySelector('footer');
+    if (footer) {
+        // If appending to footer, we might want to change position if the user wants it "inside"
+        // but typically widgets stay fixed. Let's append to footer to satisfy the request.
+        footer.appendChild(widgetContainer);
+    } else {
+        document.body.appendChild(widgetContainer);
+    }
 
     // 2. Create the Modal Container (Iframe)
     var modalContainer = document.createElement('div');
@@ -86,6 +132,8 @@
 
             // Switch to Icon Only mode after first close
             triggerBtn.classList.add('widget-btn-icon-only');
+            // Hide the dismiss button in mini mode to be as non-intrusive as possible
+            dismissBtn.style.display = 'none';
         }
     });
 
