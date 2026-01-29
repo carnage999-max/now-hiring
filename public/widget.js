@@ -42,35 +42,7 @@
     triggerBtn.onmouseenter = function () { triggerBtn.style.transform = 'scale(1.05) translateY(-2px)'; };
     triggerBtn.onmouseleave = function () { triggerBtn.style.transform = 'scale(1) translateY(0)'; };
 
-    // Close button for the widget itself
-    var dismissBtn = document.createElement('button');
-    dismissBtn.innerHTML = '×';
-    Object.assign(dismissBtn.style, {
-        width: '24px',
-        height: '24px',
-        borderRadius: '50%',
-        backgroundColor: 'rgba(0,0,0,0.3)',
-        color: '#fff',
-        border: 'none',
-        cursor: 'pointer',
-        fontSize: '18px',
-        lineHeight: '1',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        transition: 'background 0.2s',
-        marginBottom: '4px' // Little offset
-    });
-    dismissBtn.onmouseenter = function () { dismissBtn.style.backgroundColor = 'rgba(255, 69, 58, 0.6)'; };
-    dismissBtn.onmouseleave = function () { dismissBtn.style.backgroundColor = 'rgba(0,0,0,0.3)'; };
-
-    dismissBtn.onclick = function (e) {
-        e.stopPropagation();
-        widgetContainer.style.display = 'none';
-    };
-
     widgetContainer.appendChild(triggerBtn);
-    widgetContainer.appendChild(dismissBtn);
 
     // Find footer or fallback to body
     var footer = document.querySelector('footer') || document.querySelector('.site-footer') || document.querySelector('#footer');
@@ -134,6 +106,15 @@
 
     triggerBtn.onclick = openModal;
 
+    // Auto-open on load (with a slight delay for better UX)
+    if (document.readyState === 'complete') {
+        setTimeout(openModal, 800);
+    } else {
+        window.addEventListener('load', function () {
+            setTimeout(openModal, 800);
+        });
+    }
+
     // Listen for close message from iframe
     window.addEventListener('message', function (event) {
         if (event.data === 'close-widget') {
@@ -143,8 +124,6 @@
 
             // Switch to Icon Only mode after first close
             triggerBtn.classList.add('widget-btn-icon-only');
-            // Hide the dismiss button in mini mode to be as non-intrusive as possible
-            dismissBtn.style.display = 'none';
         }
     });
 
