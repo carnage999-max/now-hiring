@@ -106,13 +106,18 @@
 
     triggerBtn.onclick = openModal;
 
-    // Auto-open on load (with a slight delay for better UX)
-    if (document.readyState === 'complete') {
-        setTimeout(openModal, 800);
-    } else {
-        window.addEventListener('load', function () {
-            setTimeout(openModal, 800);
-        });
+    // Auto-open on load (ONLY ON ROOT PAGE and ONLY IF NOT SEEN BEFORE)
+    var isRoot = window.location.pathname === '/' || window.location.pathname === '/index.html';
+    var hasSeenWidget = localStorage.getItem('hiring-widget-seen');
+
+    if (isRoot && !hasSeenWidget) {
+        if (document.readyState === 'complete') {
+            setTimeout(openModal, 1200);
+        } else {
+            window.addEventListener('load', function () {
+                setTimeout(openModal, 1200);
+            });
+        }
     }
 
     // Listen for close message from iframe
@@ -121,6 +126,9 @@
             modalContainer.style.opacity = '0';
             modalContainer.style.visibility = 'hidden';
             document.body.style.overflow = '';
+
+            // Mark as seen in localStorage
+            localStorage.setItem('hiring-widget-seen', 'true');
 
             // Switch to Icon Only mode after first close
             triggerBtn.classList.add('widget-btn-icon-only');
