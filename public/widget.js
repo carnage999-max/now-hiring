@@ -7,9 +7,6 @@
     var widgetContainer = document.createElement('div');
     widgetContainer.id = 'hiring-widget-trigger';
     Object.assign(widgetContainer.style, {
-        position: 'fixed',
-        bottom: '20px',
-        right: '20px',
         zIndex: '999998',
         display: 'flex',
         alignItems: 'center',
@@ -76,12 +73,26 @@
     widgetContainer.appendChild(dismissBtn);
 
     // Find footer or fallback to body
-    var footer = document.querySelector('footer');
+    var footer = document.querySelector('footer') || document.querySelector('.site-footer') || document.querySelector('#footer');
+
     if (footer) {
-        // If appending to footer, we might want to change position if the user wants it "inside"
-        // but typically widgets stay fixed. Let's append to footer to satisfy the request.
+        // Stationary Footer Mode
+        Object.assign(widgetContainer.style, {
+            position: 'relative',
+            bottom: '0',
+            right: '0',
+            margin: '20px auto',
+            width: 'fit-content',
+            justifyContent: 'center'
+        });
         footer.appendChild(widgetContainer);
     } else {
+        // Floating Mode (Fallback)
+        Object.assign(widgetContainer.style, {
+            position: 'fixed',
+            bottom: '20px',
+            right: '20px',
+        });
         document.body.appendChild(widgetContainer);
     }
 
