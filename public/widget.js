@@ -106,19 +106,6 @@
 
     triggerBtn.onclick = openModal;
 
-    // Auto-open on load (ONLY ON ROOT PAGE and ONLY IF NOT SEEN BEFORE)
-    var isRoot = window.location.pathname === '/' || window.location.pathname === '/index.html';
-    var hasSeenWidget = localStorage.getItem('hiring-widget-seen');
-
-    if (isRoot && !hasSeenWidget) {
-        if (document.readyState === 'complete') {
-            setTimeout(openModal, 1200);
-        } else {
-            window.addEventListener('load', function () {
-                setTimeout(openModal, 1200);
-            });
-        }
-    }
 
     // Listen for close message from iframe
     window.addEventListener('message', function (event) {
