@@ -1,7 +1,11 @@
 (function () {
     // Infer the base URL from the script source
-    var scriptSource = document.currentScript ? document.currentScript.src : 'https://now-hiring-eta.vercel.app'; // Fallback
+    var scriptElement = document.currentScript;
+    var scriptSource = scriptElement ? scriptElement.src : 'https://now-hiring-eta.vercel.app'; // Fallback
     var baseUrl = new URL(scriptSource).origin;
+
+    // Get the name attribute or fallback to 'Now Hiring'
+    var buttonText = scriptElement && scriptElement.getAttribute('name') ? scriptElement.getAttribute('name') : 'Now Hiring';
 
     // 1. Create the floating trigger container
     var widgetContainer = document.createElement('div');
@@ -19,7 +23,7 @@
       <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
       <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
     </svg>
-    <span>Apply Now</span>
+    <span>${buttonText}</span>
   `;
 
     // Styles for the button
