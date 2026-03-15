@@ -36,6 +36,18 @@ export const positions = [
   "Esthetician",
   "Shampoo Technician",
   
+  // Restaurant / Hospitality (Mexican Specific)
+  "Tortilla Maker",
+  "Taquero",
+  "Kitchen Manager (Mexican Cuisine)",
+  "Cantina Manager",
+  
+  // Barbershop / Salon (Luxury Specific)
+  "Luxury Grooming Specialist",
+  "Senior Barber",
+  "Barber Apprentice",
+  "Shop Concierge",
+
   // General / Operations
   "Operations Manager",
   "Human Resources Specialist",

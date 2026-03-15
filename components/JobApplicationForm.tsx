@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, Check, AlertCircle, Loader2, X, ArrowRight, Briefcase } from 'lucide-react';
+import { Upload, Check, AlertCircle, Loader2, X, ArrowRight, Briefcase, Search, ChevronDown } from 'lucide-react';
 import { positions } from '@/lib/positions';
 import { useSearchParams } from 'next/navigation';
 import { State, City } from 'country-state-city';
@@ -79,6 +79,10 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
     source: ''
   });
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isPositionOpen, setIsPositionOpen] = useState(false);
+  const positionRef = useRef<HTMLDivElement>(null);
+
   const [statesList] = useState(State.getStatesOfCountry('US'));
   const [citiesList, setCitiesList] = useState<any[]>([]);
 
@@ -97,6 +101,16 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
   const [errorMsg, setErrorMsg] = useState('');
   const photoInputRef = useRef<HTMLInputElement>(null);
   const resumeInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (positionRef.current && !positionRef.current.contains(event.target as Node)) {
+        setIsPositionOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
@@ -478,12 +492,77 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
         <h3 className="section-title">Job & Availability</h3>
         
         <div className="form-row-2">
-          <div>
+          <div className="relative" ref={positionRef}>
             <label className="label">Position Applying For</label>
-            <select name="position" required className="glass-input" value={formData.position} onChange={handleChange}>
-              <option value="" disabled>Select...</option>
-              {positions.map(p => <option key={p} value={p}>{p}</option>)}
-            </select>
+            <div 
+              className={`glass-input select-trigger ${isPositionOpen ? 'select-active' : ''}`}
+              onClick={() => setIsPositionOpen(!isPositionOpen)}
+            >
+              <span className={formData.position ? 'text-white' : 'opacity-40'}>
+                {formData.position || 'Select position...'}
+              </span>
+              <ChevronDown size={18} className={`transition-transform ${isPositionOpen ? 'rotate-180' : ''}`} />
+            </div>
+
+            <AnimatePresence>
+              {isPositionOpen && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="select-dropdown glass-panel"
+                >
+                  <div className="select-search-container border-b border-white/10 p-2">
+                    <div className="relative group">
+                      <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 opacity-30 group-focus-within:opacity-100 transition-opacity" />
+                      <input 
+                        className="glass-input select-search-input pl-10 py-2 text-sm"
+                        placeholder="Search roles (supports regex)..."
+                        autoFocus
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                  </div>
+                  <div className="select-options-scroll max-h-60 overflow-y-auto p-1 custom-scrollbar">
+                    {positions.filter(p => {
+                      if (!searchTerm) return true;
+                      try {
+                        const regex = new RegExp(searchTerm, 'i');
+                        return regex.test(p);
+                      } catch (e) {
+                        // Fallback to simple includes if regex is invalid while typing
+                        return p.toLowerCase().includes(searchTerm.toLowerCase());
+                      }
+                    }).map(p => (
+                      <div 
+                        key={p} 
+                        className={`select-option ${formData.position === p ? 'option-selected' : ''}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setFormData(prev => ({ ...prev, position: p }));
+                          setIsPositionOpen(false);
+                          setSearchTerm('');
+                        }}
+                      >
+                        {p}
+                        {formData.position === p && <Check size={14} className="text-accent" />}
+                      </div>
+                    ))}
+                    {positions.filter(p => {
+                       try {
+                         return new RegExp(searchTerm, 'i').test(p);
+                       } catch (e) {
+                         return p.toLowerCase().includes(searchTerm.toLowerCase());
+                       }
+                    }).length === 0 && (
+                      <div className="p-4 text-center text-sm opacity-50">No positions found</div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
           <div className="flex-row gap-2">
             <div style={{ flex: 1 }}>
