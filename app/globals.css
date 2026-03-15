@@ -506,8 +506,59 @@ body {
 .flex-center { display: flex; align-items: center; justify-content: center; }
 .flex-row { display: flex; flex-direction: row; }
 .gap-2 { gap: 8px; }
+.gap-1 { gap: 4px; }
 .mt-4 { margin-top: 16px; }
 .mt-2 { margin-top: 8px; }
+.items-center { align-items: center; }
+.opacity-50 { opacity: 0.5; }
+
+/* Tooltip Styles */
+.tooltip-trigger {
+  position: relative;
+  display: inline-flex;
+  cursor: help;
+}
+
+.tooltip-content {
+  visibility: hidden;
+  width: 200px;
+  background-color: #1C1C1E;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 8px 12px;
+  position: absolute;
+  z-index: 100;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.tooltip-content::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #1C1C1E transparent transparent transparent;
+}
+
+.tooltip-trigger:hover .tooltip-content {
+  visibility: visible;
+  opacity: 1;
+}
+
 
 .legal-stack {
   display: flex;

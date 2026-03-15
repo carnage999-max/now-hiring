@@ -31,6 +31,7 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
     permanentAddress: '',
     addressHowLong: '',
     position: '',
+    requestedSalary: '',
     salaryDesired: '',
     payType: 'Hourly',
     hoursWeekly: '',
@@ -486,10 +487,20 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
           </div>
           <div className="flex-row gap-2">
             <div style={{ flex: 1 }}>
+              <label className="label group flex items-center gap-1">
+                Requested Pay / Hour
+                <div className="tooltip-trigger">
+                  <AlertCircle size={14} className="opacity-50" />
+                  <span className="tooltip-content">This is just to know your expectations to start.</span>
+                </div>
+              </label>
+              <input name="requestedSalary" required className="glass-input" placeholder="$ / hr" value={formData.requestedSalary} onChange={handleChange} />
+            </div>
+            <div style={{ flex: 1 }}>
               <label className="label">Desired Pay</label>
               <input name="salaryDesired" className="glass-input" placeholder="$" value={formData.salaryDesired} onChange={handleChange} />
             </div>
-            <div style={{ width: 120 }}>
+            <div style={{ width: 100 }}>
               <label className="label">Type</label>
               <select name="payType" className="glass-input" value={formData.payType} onChange={handleChange}>
                 <option value="Hourly">Hourly</option>

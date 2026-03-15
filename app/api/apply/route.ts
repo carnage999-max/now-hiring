@@ -117,6 +117,7 @@ export async function POST(req: NextRequest) {
                   <p><strong>Drug Screening Consent?</strong> ${data.drugScreenConsent}</p>
 
                   <h3 style="color: #444; background: #eee; padding: 5px 10px;">5. Job & Availability</h3>
+                  <p><strong>Requested Pay / Hour:</strong> $${data.requestedSalary || 'N/A'}</p>
                   <p><strong>Desired Pay:</strong> ${data.salaryDesired} / ${data.payType}</p>
                   <p><strong>Employment Type:</strong> ${data.employmentDesired}</p>
                   <p><strong>When Available:</strong> ${data.whenAvailable || 'N/A'}</p>
