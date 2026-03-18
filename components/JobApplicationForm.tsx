@@ -95,6 +95,30 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
     }
   }, [searchParams, iswidget]);
 
+  const [iconSvg, setIconSvg] = useState<string | null>(null);
+
+  useEffect(() => {
+    const iconName = searchParams.get('icon') || 'Briefcase';
+    const kebabIcon = iconName.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+    
+    if (kebabIcon !== 'briefcase') {
+      fetch(`https://unpkg.com/lucide-static@latest/icons/${kebabIcon}.svg`)
+        .then(res => res.text())
+        .then(svg => {
+          if (svg.indexOf('<svg') !== -1) {
+            const svgStart = svg.indexOf('<svg');
+            const svgEnd = svg.indexOf('</svg>');
+            if (svgStart !== -1 && svgEnd !== -1) {
+              const cleanSvg = svg.substring(svgStart, svgEnd + 6);
+              const styledSvg = cleanSvg.replace('<svg', '<svg width="40" height="40" stroke="currentColor"');
+              setIconSvg(styledSvg);
+            }
+          }
+        })
+        .catch(err => console.error('Error loading custom landing icon:', err));
+    }
+  }, [searchParams]);
+
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -275,7 +299,11 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
         className="widget-landing-card"
       >
         <div className="landing-icon-wrapper">
-          <Briefcase size={40} className="text-accent" />
+          {iconSvg ? (
+            <div dangerouslySetInnerHTML={{ __html: iconSvg }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+          ) : (
+            <Briefcase size={40} className="text-accent" />
+          )}
         </div>
         <h2 className="landing-title">We are Hiring!</h2>
         <p className="landing-subtitle">

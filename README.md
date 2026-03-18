@@ -9,14 +9,14 @@ A premium, glassmorphism-styled standalone job portal that can also be embedded 
 You can add the "Apply Now" portal to any existing website. The widget starts with a "We're Hiring" landing card and then proceeds to the full application form.
 
 ### 1. Pure HTML / Standard Websites
-Add this single line before your closing `</body>` tag. You can customize the button text using the `name` attribute:
+Add this single line before your closing `</body>` tag. You can customize the button text using the `name` attribute and the icon using the `icon` attribute (supports any [Lucide React](https://lucide.dev/icons) icon name):
 
 ```html
-<!-- Default: "Now Hiring" -->
+<!-- Default: "Now Hiring" with Briefcase icon -->
 <script src="https://now-hiring-eta.vercel.app/widget.js"></script>
 
-<!-- Custom text -->
-<script name="Now Hiring Workers" src="https://now-hiring-eta.vercel.app/widget.js"></script>
+<!-- Custom text and icon (e.g., Scissors for a barbershop, ChefHat for a restaurant) -->
+<script name="Now Hiring Stylists" icon="Scissors" src="https://now-hiring-eta.vercel.app/widget.js"></script>
 ```
 
 ### 2. Next.js (App Router)
@@ -30,9 +30,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html>
       <body>
         {children}
-        {/* Custom button text via name attribute */}
+        {/* Custom button text and icon via attributes */}
         <Script 
-          name="Now Hiring Workers" 
+          name="Now Hiring Chefs" 
+          icon="ChefHat"
           src="https://now-hiring-eta.vercel.app/widget.js" 
           strategy="afterInteractive" 
         />

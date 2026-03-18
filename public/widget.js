@@ -7,6 +7,10 @@
     // Get the name attribute or fallback to 'Now Hiring'
     var buttonText = scriptElement && scriptElement.getAttribute('name') ? scriptElement.getAttribute('name') : 'Now Hiring';
 
+    // Get the icon attribute or fallback to 'Briefcase'
+    var iconAttr = scriptElement && scriptElement.getAttribute('icon') ? scriptElement.getAttribute('icon') : 'Briefcase';
+    var kebabIcon = iconAttr.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+
     // 1. Create the floating trigger container
     var widgetContainer = document.createElement('div');
     widgetContainer.id = 'hiring-widget-trigger';
@@ -19,12 +23,35 @@
 
     var triggerBtn = document.createElement('button');
     triggerBtn.innerHTML = `
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
-      <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;" class="lucide lucide-briefcase">
+      <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
     </svg>
     <span>${buttonText}</span>
   `;
+
+    // Fetch custom icon if not generic briefcase
+    if (kebabIcon !== 'briefcase') {
+        fetch('https://unpkg.com/lucide-static@latest/icons/' + kebabIcon + '.svg')
+            .then(function(res) {
+                if (!res.ok) throw new Error('Icon not found');
+                return res.text();
+            })
+            .then(function(svg) {
+                if (svg.indexOf('<svg') !== -1) {
+                    var svgStart = svg.indexOf('<svg');
+                    var svgEnd = svg.indexOf('</svg>');
+                    if (svgStart !== -1 && svgEnd !== -1) {
+                        var styledSvg = svg.substring(svgStart, svgEnd + 6).replace('<svg', '<svg style="margin-right: 8px;"');
+                        var existingSvg = triggerBtn.querySelector('svg');
+                        if (existingSvg) {
+                            existingSvg.outerHTML = styledSvg;
+                        }
+                    }
+                }
+            })
+            .catch(function(e) { console.error('Error loading widget icon:', e); });
+    }
 
     // Styles for the button
     Object.assign(triggerBtn.style, {
@@ -89,7 +116,7 @@
 
     var iframe = document.createElement('iframe');
     var currentSite = window.location.href;
-    iframe.src = baseUrl + '/embed?source=' + encodeURIComponent(currentSite);
+    iframe.src = baseUrl + '/embed?source=' + encodeURIComponent(currentSite) + '&icon=' + encodeURIComponent(iconAttr);
     Object.assign(iframe.style, {
         width: '100%',
         height: '100%',
