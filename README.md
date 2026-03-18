@@ -9,7 +9,7 @@ A premium, glassmorphism-styled standalone job portal that can also be embedded 
 You can add the "Apply Now" portal to any existing website. The widget starts with a "We're Hiring" landing card and then proceeds to the full application form.
 
 ### 1. Pure HTML / Standard Websites
-Add this single line before your closing `</body>` tag. You can customize the button text using the `name` attribute and the icon using the `icon` attribute (supports any [Lucide React](https://lucide.dev/icons) icon name):
+Add this single line before your closing `</body>` tag. You can customize the button text using the `name` attribute and the icon using the `icon` attribute (supports any [Lucide React](https://lucide.dev/icons) icon name). You can also add an emoji using the `emoji` attribute:
 
 ```html
 <!-- Default: "Now Hiring" with Briefcase icon -->
@@ -17,6 +17,9 @@ Add this single line before your closing `</body>` tag. You can customize the bu
 
 <!-- Custom text and icon (e.g., Scissors for a barbershop, ChefHat for a restaurant) -->
 <script name="Now Hiring Stylists" icon="Scissors" src="https://now-hiring-eta.vercel.app/widget.js"></script>
+
+<!-- Custom text with an emoji and no icon -->
+<script name="Launch Your Career" emoji="🚀" src="https://now-hiring-eta.vercel.app/widget.js"></script>
 ```
 
 ### 2. Next.js (App Router)
@@ -30,10 +33,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html>
       <body>
         {children}
-        {/* Custom button text and icon via data-* attributes */}
+        {/* Custom button text, icon, and/or emoji via data-* attributes */}
         <Script 
           data-name="Now Hiring Chefs" 
           data-icon="ChefHat"
+          data-emoji="🧑‍🍳"
           src="https://now-hiring-eta.vercel.app/widget.js" 
           strategy="afterInteractive" 
         />

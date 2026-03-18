@@ -8,8 +8,10 @@
     var btnName = scriptElement && (scriptElement.getAttribute('name') || scriptElement.getAttribute('data-name'));
     var buttonText = btnName ? btnName : 'Now Hiring';
 
-    // Get the icon attribute or fallback to 'Briefcase'
+    // Get the icon and emoji attributes
     var iconName = scriptElement && (scriptElement.getAttribute('icon') || scriptElement.getAttribute('data-icon'));
+    var emojiAttr = scriptElement && (scriptElement.getAttribute('emoji') || scriptElement.getAttribute('data-emoji'));
+    
     var iconAttr = iconName ? iconName : 'Briefcase';
     var kebabIcon = iconAttr.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 
@@ -24,16 +26,27 @@
     });
 
     var triggerBtn = document.createElement('button');
-    triggerBtn.innerHTML = `
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;" class="lucide lucide-briefcase">
-      <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
-      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-    </svg>
-    <span>${buttonText}</span>
-  `;
+    var buttonInnerHtml = '';
 
-    // Fetch custom icon if not generic briefcase
-    if (kebabIcon !== 'briefcase') {
+    if (emojiAttr) {
+        buttonInnerHtml += '<span style="font-size: 20px; line-height: 1; margin-right: ' + ((!emojiAttr || iconName) ? '4px' : '8px') + '; display: flex; align-items: center;">' + emojiAttr + '</span>';
+    }
+
+    if (!emojiAttr || iconName) {
+        buttonInnerHtml += `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;" class="lucide lucide-briefcase">
+          <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+        `;
+    }
+
+    buttonInnerHtml += '<span>' + buttonText + '</span>';
+    triggerBtn.innerHTML = buttonInnerHtml;
+
+    // Fetch custom icon if needed
+    // Only fetch if we are rendering an icon (no emoji OR icon specifically requested)
+    if ((!emojiAttr || iconName) && kebabIcon !== 'briefcase') {
         fetch('https://unpkg.com/lucide-static@latest/icons/' + kebabIcon + '.svg')
             .then(function(res) {
                 if (!res.ok) throw new Error('Icon not found');
@@ -118,7 +131,12 @@
 
     var iframe = document.createElement('iframe');
     var currentSite = window.location.href;
-    iframe.src = baseUrl + '/embed?source=' + encodeURIComponent(currentSite) + '&icon=' + encodeURIComponent(iconAttr);
+    
+    var iframeSrc = baseUrl + '/embed?source=' + encodeURIComponent(currentSite);
+    if (!emojiAttr || iconName) iframeSrc += '&icon=' + encodeURIComponent(iconAttr);
+    if (emojiAttr) iframeSrc += '&data-emoji=' + encodeURIComponent(emojiAttr);
+    
+    iframe.src = iframeSrc;
     Object.assign(iframe.style, {
         width: '100%',
         height: '100%',

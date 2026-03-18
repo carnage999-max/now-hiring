@@ -96,9 +96,16 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
   }, [searchParams, iswidget]);
 
   const [iconSvg, setIconSvg] = useState<string | null>(null);
+  const emoji = searchParams.get('data-emoji') || searchParams.get('emoji');
+  const iconParam = searchParams.get('icon');
 
   useEffect(() => {
-    const iconName = searchParams.get('icon') || 'Briefcase';
+    if (emoji && !iconParam) {
+      setIconSvg(null);
+      return;
+    }
+
+    const iconName = iconParam || 'Briefcase';
     const kebabIcon = iconName.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
     
     if (kebabIcon !== 'briefcase') {
@@ -117,7 +124,7 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
         })
         .catch(err => console.error('Error loading custom landing icon:', err));
     }
-  }, [searchParams]);
+  }, [searchParams, emoji, iconParam]);
 
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
@@ -298,11 +305,18 @@ export default function JobApplicationForm({ iswidget = false }: { iswidget?: bo
         animate={{ opacity: 1, y: 0 }}
         className="widget-landing-card"
       >
-        <div className="landing-icon-wrapper">
-          {iconSvg ? (
-            <div dangerouslySetInnerHTML={{ __html: iconSvg }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
-          ) : (
-            <Briefcase size={40} className="text-accent" />
+        <div className="landing-icon-wrapper" style={{ display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'center' }}>
+          {emoji && (
+            <span style={{ fontSize: '40px', lineHeight: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {emoji}
+            </span>
+          )}
+          {(!emoji || iconParam) && (
+            iconSvg ? (
+              <div dangerouslySetInnerHTML={{ __html: iconSvg }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} />
+            ) : (
+              <Briefcase size={40} className="text-accent" />
+            )
           )}
         </div>
         <h2 className="landing-title">We are Hiring!</h2>
