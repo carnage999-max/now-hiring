@@ -30,10 +30,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html>
       <body>
         {children}
-        {/* Custom button text and icon via attributes */}
+        {/* Custom button text and icon via data-* attributes */}
         <Script 
-          name="Now Hiring Chefs" 
-          icon="ChefHat"
+          data-name="Now Hiring Chefs" 
+          data-icon="ChefHat"
           src="https://now-hiring-eta.vercel.app/widget.js" 
           strategy="afterInteractive" 
         />

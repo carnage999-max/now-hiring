@@ -5,10 +5,12 @@
     var baseUrl = new URL(scriptSource).origin;
 
     // Get the name attribute or fallback to 'Now Hiring'
-    var buttonText = scriptElement && scriptElement.getAttribute('name') ? scriptElement.getAttribute('name') : 'Now Hiring';
+    var btnName = scriptElement && (scriptElement.getAttribute('name') || scriptElement.getAttribute('data-name'));
+    var buttonText = btnName ? btnName : 'Now Hiring';
 
     // Get the icon attribute or fallback to 'Briefcase'
-    var iconAttr = scriptElement && scriptElement.getAttribute('icon') ? scriptElement.getAttribute('icon') : 'Briefcase';
+    var iconName = scriptElement && (scriptElement.getAttribute('icon') || scriptElement.getAttribute('data-icon'));
+    var iconAttr = iconName ? iconName : 'Briefcase';
     var kebabIcon = iconAttr.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 
     // 1. Create the floating trigger container
