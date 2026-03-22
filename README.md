@@ -54,6 +54,44 @@ Add the script to your `index.html` file before the `</body>` tag:
 <script src="https://now-hiring-eta.vercel.app/widget.js"></script>
 ```
 
+### 4. Custom Button & Global API
+If you want to use your own custom-styled button (e.g., a **Taco** styled button for a Mexican restaurant), you can disable the default button and trigger the widget manually.
+
+#### Option A: Selector Trigger (Auto-bind)
+Add `data-manual="true"` to disable the default button and `data-trigger=".your-selector"` to automatically bind the widget to your custom element when it's clicked.
+
+```html
+<!-- Your custom taco button -->
+<button class="taco-btn">🌮 Apply Now</button>
+
+<!-- Widget with manual mode and selector -->
+<script 
+  data-manual="true" 
+  data-trigger=".taco-btn" 
+  src="https://now-hiring-eta.vercel.app/widget.js">
+</script>
+```
+
+#### Option B: Global API (Direct Control)
+You can call the widget API from any JavaScript component (React, Vue, etc.) after the script has loaded.
+
+```javascript
+// Open the hiring form
+HiringWidget.open();
+
+// Close the hiring form
+HiringWidget.close();
+```
+
+Example in a React component:
+```tsx
+const TacoButton = () => (
+  <button onClick={() => (window as any).HiringWidget.open()}>
+    🌮 Join our Mexican Restaurant Team
+  </button>
+);
+```
+
 ---
 
 ## ✨ Features
