@@ -13,8 +13,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  manifest: "/manifest.webmanifest",
   title: "Join Our Team | Now Hiring",
   description: "Advanced job application portal with premium iOS-inspired design and dynamic field management.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: ["/favicon.ico"],
+  },
 };
 
 export default function RootLayout({
