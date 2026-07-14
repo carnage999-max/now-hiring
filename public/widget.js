@@ -21,10 +21,10 @@
     var modalContainer = document.createElement('div');
     Object.assign(modalContainer.style, {
         position: 'fixed',
-        top: '0',
-        left: '0',
-        width: '100vw',
-        height: '100vh',
+        inset: '0',
+        width: '100%',
+        height: '100%',
+        minHeight: '100dvh',
         zIndex: '999999',
         visibility: 'hidden',
         opacity: '0',
@@ -204,4 +204,3 @@
     });
 
 })();
-
