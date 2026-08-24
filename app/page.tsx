@@ -25,8 +25,20 @@ export default function Home() {
        </div>
        
        <div className="footer-text">
-         By submitting your application, you agree to our privacy policy and terms of service. 
+         By submitting your application, you agree to our privacy policy and terms of service.
          We celebrate diversity and are committed to creating an inclusive environment for all employees.
+       </div>
+       <div className="footer-text">
+         Part of the{" "}
+         <a
+           href="https://se7eninc.com"
+           target="_blank"
+           rel="noopener noreferrer"
+           style={{ textDecoration: 'underline', color: 'inherit' }}
+         >
+           Se7en
+         </a>{" "}
+         family of companies.
        </div>
     </main>
   );
