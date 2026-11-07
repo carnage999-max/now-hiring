@@ -1,7 +1,7 @@
 (function () {
     // Infer the base URL from the script source
     var scriptElement = document.currentScript;
-    var scriptSource = scriptElement ? scriptElement.src : 'https://now-hiring-eta.vercel.app'; // Fallback
+    var scriptSource = scriptElement ? scriptElement.src : 'https://hiring.se7eninc.com'; // Fallback
     var baseUrl = new URL(scriptSource).origin;
 
     // Configuration from attributes
