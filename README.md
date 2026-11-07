@@ -13,13 +13,13 @@ Add this single line before your closing `</body>` tag. You can customize the bu
 
 ```html
 <!-- Default: "Now Hiring" with Briefcase icon -->
-<script src="https://now-hiring-eta.vercel.app/widget.js"></script>
+<script src="https://hiring.se7eninc.com/widget.js"></script>
 
 <!-- Custom text and icon (e.g., Scissors for a barbershop, ChefHat for a restaurant) -->
-<script name="Now Hiring Stylists" icon="Scissors" src="https://now-hiring-eta.vercel.app/widget.js"></script>
+<script name="Now Hiring Stylists" icon="Scissors" src="https://hiring.se7eninc.com/widget.js"></script>
 
 <!-- Custom text with an emoji and no icon -->
-<script name="Launch Your Career" emoji="🚀" src="https://now-hiring-eta.vercel.app/widget.js"></script>
+<script name="Launch Your Career" emoji="🚀" src="https://hiring.se7eninc.com/widget.js"></script>
 ```
 
 ### 2. Next.js (App Router)
@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           data-name="Now Hiring Chefs" 
           data-icon="ChefHat"
           data-emoji="🧑‍🍳"
-          src="https://now-hiring-eta.vercel.app/widget.js" 
+          src="https://hiring.se7eninc.com/widget.js" 
           strategy="afterInteractive" 
         />
       </body>
@@ -51,7 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 Add the script to your `index.html` file before the `</body>` tag:
 
 ```html
-<script src="https://now-hiring-eta.vercel.app/widget.js"></script>
+<script src="https://hiring.se7eninc.com/widget.js"></script>
 ```
 
 ### 4. Custom Button & Global API
@@ -68,7 +68,7 @@ Add `data-manual="true"` to disable the default button and `data-trigger=".your-
 <script 
   data-manual="true" 
   data-trigger=".taco-btn" 
-  src="https://now-hiring-eta.vercel.app/widget.js">
+  src="https://hiring.se7eninc.com/widget.js">
 </script>
 ```
 
@@ -135,4 +135,4 @@ Optimized for **Vercel**.
 
 1. Deploy the repo to Vercel.
 2. The widget will be available at `your-app-url.com/widget.js`.
-3. Check the provided deployment at: `https://now-hiring-eta.vercel.app`
+3. Check the provided deployment at: `https://hiring.se7eninc.com`
